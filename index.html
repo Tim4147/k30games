@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title data-bind="title">App — Download APK</title>
+  <meta name="description" content="" data-bind="description" />
 
+  <!-- Canonical / Robots (flip to index when ready) -->
+  <link rel="canonical" href="" data-bind="canonical" />
+  <meta name="robots" content="index,follow" data-bind="robots" />
+
+  <!-- Open Graph / X -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="" data-bind="og_title"/>
+  <meta property="og:description" content="" data-bind="og_description"/>
+  <meta property="og:image" content="" data-bind="og_image"/>
+  <meta property="og:url" content="" data-bind="og_url"/>
+  <meta name="theme-color" content="#0b1220" data-bind="theme_color"/>
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /* ===================== CONFIG (edit per client) ===================== */
+    const CONFIG = {
+      brand: {
+        name: "K30.Games",
+        primaryHex: "#f59e0b",
+        primaryHexHover: "#d97706",
+        logo: "", // can be empty
+        version: "v1.0.1",
+      },
+      assets: {
+        apkPath: "/K30Games.apk",
+        mirrorUrl: "https://drive.google.com/file/d/1n9JVKDds-Asr-aQiBdyV49vEw9hMd0hc/view?usp=sharing", // optional
+        ogImage: "", // optional
+        canonical: "https://K30.games/",
+      },
+      content: {
+        tagline: "Play Aviator, Mines, Wingo, Teen Patti & more.",
+        features: ["⚡ Fast & Light","🛡️ Secure Build","🎁 Daily Rewards","📞 24×7 Support"],
+        fileInfo: "File size: <b>5 MB</b> • Android 8.0+",
+        supportText: "Message us on Telegram:",
+        telegramUsername: "K30games", // without @
+      },
+      socialProof: {
+        rating: 4.9,
+        totalDownloads: 1000000, // 1_000_000
+        fiveStarReviews: 50000,   // 50_000
+      },
+      seo: {
+        title: "K30.Games — Download APK",
+        description: "Official K30 Android APK. Fast, secure download with mirror link and simple install steps.",
+        robots: "index,follow",
+      },
+      pixel: {
+        metaPixelId: "759825746828747", // leave "" to disable Pixel
+      },
+      // If you duplicate this for another client, only edit CONFIG.
+    };
+    /* ==================================================================== */
+
+    // Tailwind theme from config
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: CONFIG.brand.primaryHex, 600: CONFIG.brand.primaryHexHover }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Meta Pixel (loads only if ID present) -->
+  <script>
+    (function loadPixel(id){
+      if(!id) return;
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+      t=b.createElement(e);t.async=!0;t.src=v;
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+      }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', id);
+      fbq('track', 'PageView');
+    })(CONFIG.pixel.metaPixelId);
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="" data-bind="pixel_noscript"/></noscript>
+
+  <style>
+    /* Crisp scroll & subtle gradients */
+    html,body{scroll-behavior:smooth}
+    .glass{backdrop-filter: blur(10px); background: rgba(11,18,32,.94);}
+  </style>
+</head>
+
+<body class="bg-[#0b1220] text-white pb-20">
+  <!-- Top ribbon -->
+  <div class="text-center text-xs py-2 bg-[#171e30]">
+    ✅ Official Download • Updated <span id="updatedOn"></span> • Version <b id="ver">v1.0.0</b>
+  </div>
+
+  <!-- Hero (mobile-first, ultra compact) -->
+  <main class="max-w-md mx-auto px-4 pt-6">
+    <div class="text-center">
+      <img id="logo" alt="Logo" class="mx-auto w-12 h-12 mb-3" />
+      <h1 class="text-2xl font-extrabold leading-tight">
+        Download the <span class="text-brand-500" id="brandName">App</span> App
+      </h1>
+      <p class="mt-2 text-white/80 text-sm" id="tagline"></p>
+
+      <!-- Primary CTA -->
+      <a id="primaryDownload" href="#" download
+         class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 hover:bg-brand-600 px-5 py-3.5 font-semibold shadow-lg shadow-brand-500/20">
+         ⬇️ Download APK
+      </a>
+
+      <!-- Mirror link (tiny, below; hidden if not set) -->
+      <a id="mirrorDownload" target="_blank" rel="nofollow noopener"
+         class="mt-2 inline-block text-sm text-white/70 underline decoration-white/30 underline-offset-4 hidden">
+         Mirror (Google Drive)
+      </a>
+
+      <!-- Social proof (single line, above the fold) -->
+      <div class="mt-3 text-xs text-white/80" id="socialProof"></div>
+
+      <!-- Legal + file size -->
+      <div class="mt-2 text-[11px] text-white/60" id="legalLine"></div>
+      <div class="mt-1 text-xs text-white/60" id="fileInfo"></div>
+
+      <!-- How to install link -->
+      <a href="#how" class="mt-4 inline-block text-sm text-white/80">How to install →</a>
+    </div>
+
+    <!-- Compact features in 2 columns -->
+    <section id="features" class="mt-4 grid grid-cols-2 gap-2 text-[13px]"></section>
+
+    <section id="how" class="mt-8">
+      <h2 class="text-lg font-bold">How to Install (Android)</h2>
+      <ol class="mt-3 space-y-2 text-white/85 text-sm">
+        <li><b>1.</b> Tap <b>Download APK</b> above.</li>
+        <li><b>2.</b> Allow your browser to save the file.</li>
+        <li><b>3.</b> Open <code class="bg-white/10 px-1.5 py-0.5 rounded" id="apkName">app.apk</code>.</li>
+        <li><b>4.</b> Enable <b>Install unknown apps</b> if asked.</li>
+        <li><b>5.</b> Tap <b>Install</b> and play.</li>
+      </ol>
+    </section>
+
+    <!-- Support -->
+    <section id="support" class="mt-8 mb-24">
+      <h2 class="text-lg font-bold">Need help?</h2>
+      <p class="text-sm text-white/80 mt-1">
+        <span id="supportText"></span>
+        <a id="tgLink" target="_blank" class="underline"></a>
+      </p>
+    </section>
+  </main>
+
+  <!-- Sticky mobile CTA -->
+  <div class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 glass">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center gap-2">
+      <a id="primaryDownloadSticky" href="#" download
+         class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 hover:bg-brand-600 px-4 py-3 font-semibold shadow-lg shadow-brand-500/30">
+         ⬇️ Download APK
+      </a>
+      <a id="mirrorSticky" target="_blank" rel="nofollow noopener"
+         class="inline-flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/15 px-3 py-3 font-semibold hidden">
+         Mirror
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Utility: format numbers like 1M+, 50K+
+    const fmt = (n) => n>=1e6? (Math.round(n/1e5)/10)+'M+'
+                : n>=1e3? (Math.round(n/100)/10)+'K+'
+                : n.toString();
+
+    // Bind content from CONFIG
+    (function init(){
+      // Ribbon date & version
+      document.getElementById('ver').textContent = CONFIG.brand.version || "v1.0.0";
+      const d = new Date();
+      document.getElementById('updatedOn').textContent =
+        d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).replace(/,/g,'');
+
+      // Branding / logo
+      const brandName = CONFIG.brand.name || "App";
+      document.getElementById('brandName').textContent = brandName;
+      const logo = document.getElementById('logo');
+      if (CONFIG.brand.logo) {
+        logo.src = CONFIG.brand.logo;
+        logo.onerror = () => (logo.style.display = 'none');
+      } else logo.style.display = 'none';
+
+      // APK / mirror
+      const apk = CONFIG.assets.apkPath || "#";
+      const mirror = CONFIG.assets.mirrorUrl || "";
+      const apkFileName = apk.split('/').pop() || "app.apk";
+      document.getElementById('apkName').textContent = apkFileName;
+
+      const pd = document.getElementById('primaryDownload');
+      const pds = document.getElementById('primaryDownloadSticky');
+      pd.href = pds.href = apk;
+
+      const md = document.getElementById('mirrorDownload');
+      const ms = document.getElementById('mirrorSticky');
+      if (mirror) {
+        md.href = ms.href = mirror;
+        md.classList.remove('hidden');
+        ms.classList.remove('hidden');
+      }
+
+      // Social proof line
+      const sp = CONFIG.socialProof || {};
+      const line = `★★★★★ <b>${(sp.rating||4.9).toFixed(1)}/5</b> • <b>${fmt(sp.totalDownloads||100000)}</b> downloads • <b>${fmt(sp.fiveStarReviews||5000)}</b> 5-star reviews`;
+      document.getElementById('socialProof').innerHTML = line;
+
+      // Text bits
+      document.getElementById('tagline').textContent = CONFIG.content.tagline || "";
+      document.getElementById('legalLine').innerHTML = CONFIG.content.legalLine || "";
+      document.getElementById('fileInfo').innerHTML  = CONFIG.content.fileInfo || "";
+
+      // Features
+      const featWrap = document.getElementById('features');
+      (CONFIG.content.features || []).forEach(txt=>{
+        const d = document.createElement('div');
+        d.className = "flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5";
+        d.textContent = txt;
+        featWrap.appendChild(d);
+      });
+
+      // Support/Telegram
+      document.getElementById('supportText').textContent = CONFIG.content.supportText || "Contact us:";
+      const tg = CONFIG.content.telegramUsername ? '@'+CONFIG.content.telegramUsername : '';
+      const tgUrl = CONFIG.content.telegramUsername ? 'https://t.me/'+CONFIG.content.telegramUsername : '#';
+      const tgLink = document.getElementById('tgLink');
+      tgLink.textContent = tg;
+      tgLink.href = tgUrl;
+
+      // SEO bindings
+      const setAttr = (sel, attr, val)=>{ const el=document.querySelector(sel); if(el && val) el.setAttribute(attr,val); };
+      document.querySelector('[data-bind="title"]').textContent = CONFIG.seo.title || `${brandName} — Download APK`;
+      setAttr('meta[data-bind="description"]','content', CONFIG.seo.description || '');
+      setAttr('link[data-bind="canonical"]','href', CONFIG.assets.canonical || '');
+      setAttr('meta[data-bind="robots"]','content', CONFIG.seo.robots || 'index,follow');
+      setAttr('meta[data-bind="og_title"]','content', CONFIG.seo.title || '');
+      setAttr('meta[data-bind="og_description"]','content', CONFIG.seo.description || '');
+      setAttr('meta[data-bind="og_image"]','content', CONFIG.assets.ogImage || '');
+      setAttr('meta[data-bind="og_url"]','content', CONFIG.assets.canonical || '');
+      setAttr('meta[data-bind="theme_color"]','content', CONFIG.brand.primaryHex || '#0b1220');
+
+      // Pixel noscript URL if pixel enabled
+      const ns = document.querySelector('noscript img[data-bind="pixel_noscript"]');
+      if (ns && CONFIG.pixel.metaPixelId) {
+        ns.src = `https://www.facebook.com/tr?id=${encodeURIComponent(CONFIG.pixel.metaPixelId)}&ev=PageView&noscript=1`;
+      }
+
+      // Click tracking (Meta Pixel custom events guarded)
+      const track=(n,d={})=>{ try{ if(window.fbq) fbq('trackCustom', n, d);}catch(e){} };
+      pd.addEventListener('click',()=>track('APKDownload',{source:'primary'}));
+      pds.addEventListener('click',()=>track('APKDownload',{source:'sticky'}));
+      if (mirror) {
+        md.addEventListener('click',()=>track('APKDownload',{source:'mirror'}));
+        ms.addEventListener('click',()=>track('APKDownload',{source:'mirror-sticky'}));
+      }
+    })();
+  </script>
+</body>
+</html>
